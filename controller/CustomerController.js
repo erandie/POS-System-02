@@ -81,7 +81,7 @@ $('#register_btn').on('click', function () {
 
         if (customer_array.push(customer)) {
             Swal.fire({
-                position: "top-end",
+                position: "center",
                 icon: "success",
                 title: "Customer has been saved successfully!",
                 showConfirmButton: false,

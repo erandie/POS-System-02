@@ -72,7 +72,7 @@ $('#add_item_btn').on('click', function () {
         if (item_array.push(item)) {
 
             Swal.fire({
-                position: "top-end",
+                position: "center",
                 icon: "success",
                 title: "Item has been saved successfully!",
                 showConfirmButton: false,
