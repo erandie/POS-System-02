@@ -2,6 +2,8 @@ import CustomerModel from "../models/CustomerModel.js";
 
 import {customer_array} from "../db/database.js";
 
+import {loadCustomers} from "./OrderController.js";
+
 // ==============customer section================
 
 $(document).ready(function () {
@@ -89,6 +91,8 @@ $('#register_btn').on('click', function () {
             });
 
             loadCustomerToTable();
+
+            loadCustomers();
 
             clearForm();
 

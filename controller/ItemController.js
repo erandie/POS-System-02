@@ -2,6 +2,8 @@ import ItemModel from "../models/ItemModel.js";
 
 import { item_array } from "../db/database.js";
 
+import {loadItems} from "./OrderController.js";
+
 //===============generate Item Code================
 
 let generateItemCode = function generateItemCode() {
@@ -79,6 +81,7 @@ $('#add_item_btn').on('click', function () {
                 timer: 1500
             });
 
+            loadItems();
             loadItemToTable();
             clearForm();
         } else {

@@ -1,24 +1,24 @@
-import {customer_array, item_array, order_array, cart_arr} from "../db/database.js";
+import {customer_array, item_array, order_array, cart_arr, orderDetail_arr} from "../db/database.js";
 import OrderModel from "../models/OrderModel.js";
 import OrderDetailModel from "../models/OrderDetailModel.js";
 
 export function loadCustomers() {
 
     $("#customers").empty();
-    $("#customers").append('<option value="">Select a customer</option>');
+    $("#customers").append('<option value="">Select a Customer</option>');
 
     customer_array.forEach(item => {
-        let option = `<option value="${item.customer_id()}">${item.customer_id}</option>`;
-        $("customers").append(option);
+        let option = `<option value="${item._customer_id}">${item._customer_id}</option>`;
+        $("#customers").append(option);
     });
 }
 
 export function loadItems() {
-    $('#items').empty();
-    $('#items').append(`<option value = ""> Select An Item</option>`);
+    $('#itemsId').empty();
+    $('#itemsId').append(`<option value = ""> Select An Item</option>`);
     item_array.forEach(item => {
         let option = `<option value = "${item._item_id}">${item._item_id}</option>>`
-        $("#items").append(option);
+        $("#itemsId").append(option);
     });
 }
 
@@ -30,17 +30,17 @@ $(document).ready(function () {
 
 let generateOrderId = function generateOrderId() {
     let order_id = order_array.length + 1;
-    return "0" + order_id.toString().padStart(3, '0');
+    return "Or" + order_id.toString().padStart(3, '0');
 };
 
-$("#items").on('change', function () {
+$("#itemsId").on('change', function () {
 
     let id = $(this).val();
-    let item = item_array.find(item => item.item_id === id);
+    let item = item_array.find(item => item._item_id === id);
     if (item) {
         $("#itemName").val(item._item_name);
-        $("#unitPrice-03").val(item._unit_price);
-        $('#qtyOnHand').val(item._quantity);
+        $("#itemUnitPrice").val(item._unit_price);
+        $('#itemQtyOnHand').val(item._quantity);
     } else {
         $("#itemName").val("");
         $("#unitPrice-03").val("");
@@ -55,28 +55,28 @@ $("#customers").on('change', function () {
     if (customer) {
         $("#customerName").val(customer._customer_name);
     } else {
-        $("#customerName").val(' ');
+        $("#customerName").val('');
     }
 });
 
 const loadCartTable = () => {
-    $('#orderTableBody').empty();
+    $('#poTableBody').empty();
     cart_arr.forEach(item => {
         let data = `<tr>
-                        <td>${item.item_id}</td>
-                        <td>${item.item_name}</td>
+                         <td>${item.item_code}</td>
+                        <td>${item.description}</td>
+                        <td>${item.qty}</td>
                         <td>${item.unit_price}</td>
-                        <td>${item.quantity()}</td>
                         <td>${item.total}</td>
                     </tr>`;
-        $('#orderTableBody').append(data);
+        $('#poTableBody').append(data);
     });
 }
 
-$('#save_order_btn').on('click', function () {
-    let item_code = $("#items").val();
+$('#addToCartBtn').on('click', function () {
+    let item_code = $("#itemsId").val();
     let description = $("#itemName").val();
-    let unit_price = parseFloat($("#itemPrice").val());
+    let unit_price = parseFloat($("#itemUnitPrice").val());
     let qtyOnHand = parseInt($("#itemQtyOnHand").val());
     let qty = parseInt($("#itemQty").val());
 
@@ -100,6 +100,9 @@ $('#save_order_btn').on('click', function () {
 
     let total = unit_price * qty;
 
+    $('#totalAmount').val(cart_arr.reduce((sum, item) => sum + item.total, 0).toFixed(2));
+
+
     let cart_item = {
         item_code,
         description,
@@ -113,6 +116,76 @@ $('#save_order_btn').on('click', function () {
     updateItemArray();
     clearItemInputs();
 });
+
+function updateItemArray(){
+    let item_code = $("#itemsId").val();
+    let item = item_array.find(item => item.item_code === item_code);
+    let qty = parseInt($("#itemQty").val());
+
+    if (item) {
+        item._quantity -= qty;
+    } else {
+        console.error("Item Not Found");
+    }
+}
+
+$("#placeOrderBtn").on('click', function () {
+    let order_id = generateOrderId();
+    let date = $("#orderDate").val();
+    let customer_id =  $("#customers").val();
+    let total = cart_arr.reduce((sum, item) => sum + item.total, 0);
+
+    if (cart_arr.length === 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "No items in the cart!",
+        });
+        return;
+    }
+
+    let order = new OrderModel(order_id, customer_id, date, total);
+    order_array.push(order);
+
+    cart_arr.forEach(item => {
+        let orderDetail = new OrderDetailModel(order_id, item.item_code, item.quantity, item.unit_price);
+        orderDetail_arr.push(orderDetail);
+    });
+
+    Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Order placed successfully",
+        showConfirmButton: false,
+        timer: 1500
+    });
+
+    clearOrderForm();
+
+});
+
+function clearOrderForm(){
+    $("#itemsId").val('');
+    $("#itemUnitPrice").val('');
+    $("#itemName").val('');
+    $("#itemQty").val('');
+    $("#itemQtyOnHand").val('');
+    $("#orderId").val('');
+    $("#orderDate").val('');
+    $("#customers").val('');
+    $("#customerName").val('');
+    $("#poTableBody").val('');
+   cart_arr.length = 0;
+}
+
+function clearItemInputs(){
+    $("#itemsId").val('');
+    $("#itemUnitPrice").val('');
+    $("#itemName").val('');
+    $("#itemQty").val('');
+    $("#customers").val('');
+    $("#customerName").val('');
+}
 
 
 

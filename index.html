@@ -406,7 +406,9 @@
                         <th scope="col">Actions</th>
                     </tr>
                     </thead>
-                    <tbody id="customerTableBody"></tbody>
+                    <tbody id="customerTableBody">
+
+                    </tbody>
                 </table>
                 <p class="placeholder-glow">
                     <span class="placeholder col-12"></span>
@@ -570,7 +572,7 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <label for="orderId" class="form-label">Order ID</label>
-                    <input type="text" class="form-control" id="orderId" readonly>
+                    <input type="text" class="form-control" id="orderId" required>
                 </div>
                 <div class="col-md-6">
                     <label for="orderDate" class="form-label">Date</label>
@@ -581,9 +583,9 @@
             <!-- Customer Selection Section -->
             <div class="row g-3 align-items-center mt-4">
                 <div class="col-md-4">
-                    <label for="customers" class="form-label">Customer ID</label>
-                    <select id="customers" class="form-select" required>
-                        <option value="" selected>Select Customer ID</option>
+                    <label id="customerId" for="customers" class="form-label">Customer ID</label>
+                    <select id="customers" aria-label="Default select example" class="form-select">
+<!--                        <option value="" selected>Select Customer ID</option>-->
                     </select>
                 </div>
                 <div class="col-md-8">
@@ -594,9 +596,9 @@
             <!-- Item Selection Section -->
             <div class="row g-3 align-items-center mt-4">
                 <div class="col-md-4">
-                    <label for="items" class="form-label">Item ID</label>
-                    <select id="items" class="form-select" required>
-                        <option value="" selected>Select Item ID</option>
+                    <label for="itemsId" class="form-label">Item ID</label>
+                    <select id="itemsId" class="form-select" required>
+<!--                        <option value="" selected>Select Item ID</option>-->
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -632,7 +634,7 @@
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody id="poTableBody"></tbody>
                 </table>
             </div>
 
