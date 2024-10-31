@@ -37,11 +37,18 @@ const loadCustomerToTable = () => {
             <td>${item.customer_name}</td>
             <td>${item.customer_address}</td>
             <td>${item.contact}</td>
-            <td class="row-actions"><button class="btn btn-danger" id="delete-customer">Delete</button></td>
+            <td><button class="removeItem" data-index="${index}">Remove</button></td>
         </tr>`
         $('#customerTableBody').append(data);
 
     });
+
+    $(".removeItem").on('click', function () {
+        let index = $(this).data("index");
+        customer_array.splice(index, 1);
+        loadCustomerToTable();
+    });
+
 }
 
 let customerCount = 0;
@@ -95,8 +102,6 @@ $('#register_btn').on('click', function () {
             loadCustomers();
 
             clearForm();
-
-            customer_array.push(customer);
 
         } else {
             Swal.fire({
@@ -168,7 +173,7 @@ $('#customer_clear_btn').on('click', function () {
     clearForm();
 
 });
-p
+
 function clearForm() {
 
     $('#id-input').val(generateCustomerId());
@@ -182,7 +187,8 @@ function clearForm() {
     $('#contactt').val("");
 }
 
-$('#delete-customer').on('click', function () {
+$('#customerTableBody').on('click', '.delete-customer', function () {
+    let index = $(this).data('index');
 
     Swal.fire({
         title: "Are you sure?",
@@ -194,23 +200,17 @@ $('#delete-customer').on('click', function () {
         confirmButtonText: "Yes, delete it!"
     }).then((result) => {
         if (result.isConfirmed) {
-            customer_array.splice(selected_customer_index);
-
-            loadCustomerToTable();
-            clearForm();
-            generateCustomerId();
-
+            customer_array.splice(index, 1); // Remove customer from array
+            loadCustomerToTable(); // Reload table after deletion
+            clearForm(); // Clear form inputs
             Swal.fire({
                 title: "Deleted!",
                 text: "Customer has been deleted.",
                 icon: "success"
             });
-
-
         }
     });
 });
-
 
 
 

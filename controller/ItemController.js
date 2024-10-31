@@ -1,6 +1,6 @@
 import ItemModel from "../models/ItemModel.js";
 
-import { item_array } from "../db/database.js";
+import {customer_array, item_array} from "../db/database.js";
 
 import {loadItems} from "./OrderController.js";
 
@@ -29,10 +29,17 @@ const loadItemToTable = () => {
             <td>${item.item_name}</td>
             <td>${item.quantity}</td>
             <td>${item.unit_price}</td>
-            <td class="row-actions"><button class="btn btn-danger" id="delete-item">Delete</button></td>
+             <td><button class="removeItem" data-index="${index}">Remove</button></td>
         </tr>`
         $('#itemTableBody').append(data);
     });
+
+    $(".removeItem").on('click', function () {
+        let index = $(this).data("index");
+        item_array.splice(index, 1);
+        loadItemToTable();
+    });
+
 }
 
 //======================Save Item===============
@@ -228,6 +235,8 @@ $('#delete-item').on('click', function() {
     const item_id = $('#id-inputt-02').text(); // Get the ID of the customer to delete
     deleteItem(item_id);
 });
+
+
 
 
 
