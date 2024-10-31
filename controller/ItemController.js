@@ -29,7 +29,7 @@ const loadItemToTable = () => {
             <td>${item.item_name}</td>
             <td>${item.quantity}</td>
             <td>${item.unit_price}</td>
-             <td><button class="removeItem" data-index="${index}">Remove</button></td>
+             <td><button class="removeItem" style="background-color: #dc3545; color: white; font-weight: bold; border-radius: 10%; border: none" data-index="${index}">Remove</button></td>
         </tr>`
         $('#itemTableBody').append(data);
     });

@@ -37,7 +37,7 @@ const loadCustomerToTable = () => {
             <td>${item.customer_name}</td>
             <td>${item.customer_address}</td>
             <td>${item.contact}</td>
-            <td><button class="removeItem" data-index="${index}">Remove</button></td>
+            <td><button style="background-color: #dc3545; color: white; font-weight: bold; border-radius: 10%; border: none" class="removeItem" data-index="${index}">Remove</button></td>
         </tr>`
         $('#customerTableBody').append(data);
 
