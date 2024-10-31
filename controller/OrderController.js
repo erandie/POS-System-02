@@ -187,8 +187,11 @@ function clearOrderForm() {
 }
 
 function clearItemInputs() {
+    $("#customers").val('');
+    $("#customerName").val('');
     $("#itemsId").val('');
     $("#itemUnitPrice").val('');
     $("#itemName").val('');
     $("#itemQty").val('');
+    $("#itemQtyOnHand").val('');
 }
