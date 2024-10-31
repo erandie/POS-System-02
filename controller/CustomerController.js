@@ -8,6 +8,13 @@ $(document).ready(function () {
     $("#id-input").val(generateCustomerId());
 });
 
+//==================Mobile Validation==============
+
+const validateMobileNumber = (contact) => {
+    const sriLankanMobileRegex = /^(?:\+94|0)?7[0-9]{8}$/;
+    return sriLankanMobileRegex.test(contact);
+}
+
 //=================generateCustomerId===============
 
 let generateCustomerId = function generateCustomerId() {
@@ -28,11 +35,15 @@ const loadCustomerToTable = () => {
             <td>${item.customer_name}</td>
             <td>${item.customer_address}</td>
             <td>${item.contact}</td>
+            <td class="row-actions"><button class="btn btn-danger" id="delete-customer">Delete</button></td>
         </tr>`
         $('#customerTableBody').append(data);
 
     });
 }
+
+let customerCount = 0;
+$('#customer-count').text(customerCount);
 
 //================Register Customer=====================
 
@@ -42,18 +53,57 @@ $('#register_btn').on('click', function () {
     let customer_address = $('#address-input').val();
     let contact = $('#contact').val();
 
-   let customer = new CustomerModel(
-       customer_id,
-       customer_name,
-       customer_address,
-       contact
-   );
+    if (customer_name.length == 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Input",
+            text: "Invalid Customer Name!",
+        });
+    } else if (customer_address.length == 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Input",
+            text: "Invalid Customer Address!",
+        });
+    } else if (!validateMobileNumber(contact)) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Input",
+            text: "Invalid Contact Number!",
+        });
+    } else {
+        let customer = new CustomerModel(
+            customer_id,
+            customer_name,
+            customer_address,
+            contact
+        );
 
-   customer_array.push(customer);
+        if (customer_array.push(customer)) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Customer has been saved successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
 
-   loadCustomerToTable();
+            loadCustomerToTable();
 
-   clearForm();
+            clearForm();
+
+            customer_array.push(customer);
+
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Customer not been saved!!",
+
+            });
+        }
+
+    }
 
 });
 
@@ -127,6 +177,35 @@ function clearForm() {
     $('#address-inputt').val("");
     $('#contactt').val("");
 }
+
+$('#delete-customer').on('click', function () {
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            customer_array.splice(selected_customer_index);
+
+            loadCustomerToTable();
+            clearForm();
+            generateCustomerId();
+
+            Swal.fire({
+                title: "Deleted!",
+                text: "Customer has been deleted.",
+                icon: "success"
+            });
+
+
+        }
+    });
+});
 
 
 

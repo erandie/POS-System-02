@@ -42,18 +42,65 @@ $('#add_item_btn').on('click', function () {
     let quantity = $('#quantity').val();
     let unit_price = $('#unitPrice').val();
 
-    let item = new ItemModel(
-        item_id,
-        item_name,
-        quantity,
-        unit_price
-    );
+    if (item_name.length == 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Input",
+            text: "Invalid Item Name!",
+        });
+    } else if (unit_price.length == 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Input",
+            text: "Invalid Unit Price!",
+        });
+    } else if (quantity.length == 0) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Input",
+            text: "Invalid Quantity!",
+        });
+    } else {
 
-    item_array.push(item);
+        let item = new ItemModel(
+            item_id,
+            item_name,
+            quantity,
+            unit_price
+        );
 
-    loadItemToTable();
+        if (item_array.push(item)) {
 
-    clearForm();
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Item has been saved successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+
+            loadItemToTable();
+            clearForm();
+        } else {
+
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Item not been saved!!",
+
+            });
+
+        }
+
+    }
+
+
+
+    // item_array.push(item);
+
+
+
+
 });
 
 function clearForm() {
